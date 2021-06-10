@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Conferencistas
+{% endblock %}
+
+{% block container %}
+
+    <!-- emmet: meta lenguaje para generar html div.clase>li*5.fila-->
+    <div class="row">
+        <!--Formulario-->
+        <div class="col-3">
+            <form action="{% url 'conferencistas' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" required autofocus>
+                </div>
+                <div class="mb-3">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" name="apellido" id="apellido" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="experiencia">Experiencia</label>
+                    <input type="text" name="experiencia" id="experiencia" class="form-control" placeholder="Lenguajes de programación" required>
+                </div>
+                <div class="mb-3">
+                    <input type="submit" class="btn btn-success" value="Registrar conferencista">
+                </div>
+            </form>
+        </div>
+        <!--Datos-->
+        <div class="col-9">
+            {% if messages %}
+                <div class="alert alert-success mb-2">
+                {% for message in messages %}
+                    {{ message|safe }}
+                {% endfor %}
+                </div>
+            {% endif %}
+            <form action="" method="get">
+                <input type="search" name="q" value="{{ q|default_if_none:'' }}" class="form-control" placeholder="Buscar conferencistas">
+            </form>
+
+            <h2 class="mt-3">Lista de Conferensistas: {{ conferencistas.count }}</h2>
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Experiencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in conferencistas %}
+                        <tr>
+                            <td>{{c.nombre}}</td>
+                            <td>{{c.apellido}}</td>
+                            <td>{{c.experiencia}}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-danger text-center">No se encontraron resultados</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $(function () {
+        
+        setTimeout(() => {
+            $('.alert').slideUp(function () {
+                $(this).remove();
+            });
+        }, 3000)
+
+    });
+</script>
+{% endblock  %}
